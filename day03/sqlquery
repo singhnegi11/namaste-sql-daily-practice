@@ -1,0 +1,9 @@
+--query04
+Rank function could be used with aggreagrate function but the variables must be part of aggregrate function, refer below sample query for explanation.
+  
+WITH CTE AS (select COUNT(project_id) AS no_of_completed_projects ,employee_name,format(project_completion_date,'yyyyMM') AS YEAR_MONTH,
+RANK() OVER (PARTITION BY format(project_completion_date,'yyyyMM') ORDER BY COUNT(project_id) DESC) AS RN FROM PROJECTS
+GROUP BY employee_name,format(project_completion_date,'yyyyMM'))
+SELECT CT.employee_name,CT.no_of_completed_projects,CT.YEAR_MONTH FROM CTE CT
+WHERE CT.RN = 1
+ORDER BY CT.no_of_completed_projects DESC,CT.employee_name DESC
