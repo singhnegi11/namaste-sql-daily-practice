@@ -6,3 +6,19 @@ Because of that reference, the database cannot execute it independently.
   select emp_id,salary,department from employee e1
 where salary > (select avg(salary) from employee e2
 			   where e1.department <> e2.department);
+
+
+----cross join 
+A CROSS JOIN is a type of SQL join that produces the Cartesian product of two tables.
+Simply put:
+
+✅ Every row from the first table is combined with every row from the second table
+
+There is no join condition.
+Explicit CROSS JOIN
+
+
+SELECT *
+FROM table1
+CROSS JOIN table2
+
