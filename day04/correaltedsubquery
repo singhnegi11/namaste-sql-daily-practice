@@ -22,3 +22,12 @@ SELECT *
 FROM table1
 CROSS JOIN table2
 
+---- roll over for aggreagarte function
+
+
+with cte as (select transaction_date,avg(transaction_amount) as aov from transactions
+group by transaction_date),
+cte2 as (select transaction_date,aov,min(aov) over() as min, max(aov) over () as max from cte )
+select ct2.transaction_date,ct2.aov,round((ct2.max-ct2.min),2) as diff_from_highest_aov from cte2 ct2
+where ct2.aov=ct2.min
+
