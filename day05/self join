@@ -16,3 +16,19 @@ select ct.driver_id,ct.avg_rating,
        case when tier = 1 then 'Top' 
 	        when tier = 2 then 'Middle' 
 			when tier = 3 then 'Bottom' end as performance_tier from cte ct
+
+
+---how to add union all for adding extra row with different type in the end of column 
+
+with cte as (select location_id,product_id,
+(inventory_level-inventory_target ) as excess_insufficient_qty from inventory),
+cte2 as (select location_id,sum(excess_insufficient_qty) as excess_insufficient_qty,
+sum((excess_insufficient_qty*unit_cost)) as excess_insufficient_value from cte ct
+inner join products p on ct.product_id =p.product_id
+group by location_id)
+
+select cast(location_id as varchar(50)) as location_id,excess_insufficient_qty,excess_insufficient_value from cte2 
+union all
+select 'Overall' as location_id,
+sum(excess_insufficient_qty) as excess_insufficient_qty,
+sum(excess_insufficient_value) as excess_insufficient_value from cte2;
