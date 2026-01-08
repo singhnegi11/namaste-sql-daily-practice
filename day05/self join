@@ -32,3 +32,22 @@ union all
 select 'Overall' as location_id,
 sum(excess_insufficient_qty) as excess_insufficient_qty,
 sum(excess_insufficient_value) as excess_insufficient_value from cte2;
+
+---how to use subquery in the from statement
+
+select
+  customer_name,
+  sum(order_value_sum) as total_order_value,
+  sum(case when order_count_per_day >= 2 then order_value_sum else 0 end) as multi_order_day_value
+from (
+  select
+    customer_name,
+    date(order_date) as order_day,
+    sum(order_value) as order_value_sum,
+    count(order_id) as order_count_per_day
+  from orders
+  group by customer_name,date(order_date)
+) t
+group by customer_name
+having multi_order_day_value > 0
+;
