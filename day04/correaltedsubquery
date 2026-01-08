@@ -1,0 +1,8 @@
+🔹 Correlated subquery
+A subquery that references a column from the outer query.
+Because of that reference, the database cannot execute it independently.
+
+
+  select emp_id,salary,department from employee e1
+where salary > (select avg(salary) from employee e2
+			   where e1.department <> e2.department);
