@@ -31,3 +31,18 @@ cte2 as (select transaction_date,aov,min(aov) over() as min, max(aov) over () as
 select ct2.transaction_date,ct2.aov,round((ct2.max-ct2.min),2) as diff_from_highest_aov from cte2 ct2
 where ct2.aov=ct2.min
 
+---- we can use aggregate fucntion with group by , in that case all rows are considered as single group and we get aggreagted result as one row in o/p 
+In SQL, when you use an aggregate function (like SUM, COUNT, AVG, etc.) without a GROUP BY, the database treats the entire result set as a single implicit group and returns one row.
+SUM(...) is an aggregate over all rows from cte, hence it returns a single scalar.
+You don’t need GROUP BY unless you want multiple groups (e.g., count per location_id, per emp_id, per day, etc.).
+
+
+Think of it like:
+
+No GROUP BY ⇒ one big group ⇒ one aggregated result row.
+
+
+with cte as (select *,lead(created_at) over (partition by emp_id order by created_at) as date from employee_record )
+select sum(case when '2019-04-01 19:05:00' between ct.created_at and ct.date then 1 else 0 end ) 
+ as no_of_emp_inside from cte ct;
+
