@@ -4,3 +4,15 @@ A self join is a SQL join where a table is joined with itself. It’s used when 
 
 select e1.emp_name,e1.salary,e1.joining_date,e2.salary as manager_salary , e2.joining_date as manager_joining_date from employee e1 join employee e2 on e1.manager_id =e2.emp_id 
 where e1.salary> e2.salary and e1.joining_date>e2.joining_date order by e1.emp_name;
+
+
+----ntile function 
+
+The NTILE() function is a window (analytic) function in SQL that is used to divide an ordered result set into a specified number of roughly equal groups (buckets) and assign each row a bucket number.
+It’s commonly used for ranking, segmentation, and percentile-style analysis.
+
+with cte as (select *,ntile(3) over (order by avg_rating desc) as tier from driver_ratings)
+select ct.driver_id,ct.avg_rating,
+       case when tier = 1 then 'Top' 
+	        when tier = 2 then 'Middle' 
+			when tier = 3 then 'Bottom' end as performance_tier from cte ct
