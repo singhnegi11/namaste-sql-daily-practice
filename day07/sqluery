@@ -1,0 +1,6 @@
+The main issue is that NOT IN can behave unexpectedly if the subquery returns NULL values—any NULL in the list makes the predicate evaluate to UNKNOWN and filters out everything. Use NOT EXISTS or filter out NULLs.
+
+important - any null value in the subquery list will return result to zero therefore incldue not null in where clause 
+
+SELECT e1.employee_id,e1.name,e1.manager_id FROM employees e1
+ where e1.employee_id not in (select e2.manager_id from employees e2 where e2.manager_id is not null);
