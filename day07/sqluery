@@ -4,3 +4,17 @@ important - any null value in the subquery list will return result to zero there
 
 SELECT e1.employee_id,e1.name,e1.manager_id FROM employees e1
  where e1.employee_id not in (select e2.manager_id from employees e2 where e2.manager_id is not null);
+
+
+---To convert (123)-456-789 → 123456789 in SQL Server, you should use the REPLACE() function (multiple times) or TRANSLATE() (SQL Server 2017+).
+
+
+
+with cte as (select customer_id,trim(customer_name) as customer_name,
+trim(email) as email,
+replace(TRANSLATE(phone,'()-.+','     '),' ','') as phone,coalesce(address,'UNKNOWN') as address,
+rank() over (partition by email order by customer_id) as rn from customers)
+
+select customer_id,customer_name,lower(email) as email,phone,address from cte
+where rn = 1
+order by customer_id;
