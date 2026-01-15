@@ -1,1 +1,12 @@
+--always remeber when dealing with dates , if minute and second are invloved then take consieration of converting into minite and second dont take the hour value,like in below example 
+with cte as (select emp_id, 
+sum(case when datediff(second,login,logout)/3600 >= 8  then 1 else 0 end) as cond1,
+sum(case when datediff(second,login,logout)/3600 >= 10  then 1 else 0 end) as cond2
+ 
+from employees
+group by emp_id)
+
+select emp_id,case when cond1>=3 and cond2>= 2 then 'both'
+                   when cond1>=3 then '1'
+                   when cond2>='2' then '2'  end as criterian from cte 
 
